@@ -6,15 +6,15 @@ import com.google.gson.annotations.SerializedName;
  * Created by adrian on 9/05/16.
  */
 public class Parada {
-    @SerializedName("id")
-    private String id;
-    @SerializedName("passkey")
-    private String passkey;
-    @SerializedName("idstop")
-    private int idstop;
-    @SerializedName("cultureinfo")
-    private String cultureinfo;
-    public Parada(String id, String passkey, int idStop, String cultureinfo) {
+
+    final String id;
+
+    final String passkey;
+
+    final String idstop;
+
+    final String cultureinfo;
+    public Parada(String id, String passkey, String idStop, String cultureinfo) {
         this.id = id;
         this.passkey = passkey;
         this.idstop = idStop;
@@ -24,31 +24,23 @@ public class Parada {
         return passkey;
     }
 
-    public void setPasskey(String passkey) {
-        this.passkey = passkey;
-    }
+
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public int getIdstop() {
+
+    public String getIdstop() {
         return idstop;
     }
 
-    public void setIdstop(int idstop) {
-        this.idstop = idstop;
-    }
+
 
     public String getCultureinfo() {
         return cultureinfo;
     }
 
-    public void setCultureinfo(String cultureinfo) {
-        this.cultureinfo = cultureinfo;
-    }
+
 }

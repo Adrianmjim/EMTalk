@@ -303,7 +303,7 @@ public class Arrive {
 
     @Override
     public String toString() {
-        return busId + busTimeLeft;
+        return busId + " " + busTimeLeft;
     }
 
 }

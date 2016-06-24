@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by adrian on 23/05/16.
  */
-public class ListaParadas {
+public class ListaLlegadas {
     @SerializedName("arrives")
     private List<Arrive> arrives = new ArrayList<Arrive>();
 
@@ -17,14 +17,14 @@ public class ListaParadas {
      * No args constructor for use in serialization
      *
      */
-    public ListaParadas() {
+    public ListaLlegadas() {
     }
 
     /**
      *
      * @param arrives
      */
-    public ListaParadas(List<Arrive> arrives) {
+    public ListaLlegadas(List<Arrive> arrives) {
         this.arrives = arrives;
     }
 
@@ -46,7 +46,7 @@ public class ListaParadas {
         this.arrives = arrives;
     }
 
-    public ListaParadas withArrives(List<Arrive> arrives) {
+    public ListaLlegadas withArrives(List<Arrive> arrives) {
         this.arrives = arrives;
         return this;
     }

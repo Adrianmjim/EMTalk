@@ -12,17 +12,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.List;
+
+import pad.ucm.fdi.emtalk.modelo.GestorConexion;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 
 public class ActividadPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static TextView texto;
+    private GestorConexion gestor;
+    private static ListaLlegadas lista;
+    private static ListaLineas listaLineas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        texto =(TextView) findViewById(R.id.boton);
+        gestor = new GestorConexion();
+        gestor.getLineas();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +54,9 @@ public class ActividadPrincipal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
+    public static void respuesta(String entrada) {
+        texto.setText(entrada);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -82,20 +97,25 @@ public class ActividadPrincipal extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public static void setLlegadas(ListaLlegadas lista2) {
+        lista = lista2;
+        texto.setText(lista.getArrives().get(0).toString());
+    }
+    public static void setLineas(ListaLineas lista) {
+        listaLineas = lista;
+        texto.setText(lista.getResultDescription());
     }
 }

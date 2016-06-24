@@ -1,12 +1,19 @@
 package pad.ucm.fdi.emtalk.modelo;
 
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import pad.ucm.fdi.emtalk.ActividadPrincipal;
-import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
-import pad.ucm.fdi.emtalk.modelo.tiposApi.Parada;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
+
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,54 +26,56 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class GestorConexion {
     private Retrofit retrofit;
-    private final String BASE_URL = "https://openbus.emtmadrid.es/emt-proxy-server/last/";
-    private final String TIMES_FROM_STOP_URL = "GetArriveStop.php";
+    private final String BASE_URL = "https://openbus.emtmadrid.es:9443/emt-proxy-server/last/";
     private final String API_CLIENT_ID = "WEB.SERV.adrima05@ucm.es";
     private final String API_PASSKEY = "56B93B0E-5E42-4E64-BEE1-44977F5379CA";
-    private List<Arrive> aux = new ArrayList<Arrive>();
+    private Conexion con;
     public GestorConexion() {
 
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-        Conexion con = retrofit.create(Conexion.class);
+        con = retrofit.create(Conexion.class);
 
-        Parada paradas = new Parada(API_CLIENT_ID, API_PASSKEY, 1513, "ES");
-        Call<ListaParadas> llamada = con.getArriveStop(paradas);
+    }
+    public void  getLlegadas(String parada) {
+        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);
+        RequestBody pass = RequestBody.create(MediaType.parse("text/plain"), API_PASSKEY);
+        RequestBody num = RequestBody.create(MediaType.parse("text/plain"), parada);
+        Call<ListaLlegadas> llamada = con.getArriveStop(id,pass,num);
 
-
-        llamada.enqueue(new Callback<ListaParadas>() {
+        llamada.enqueue(new Callback<ListaLlegadas>() {
             @Override
-            public void onResponse(Call<ListaParadas> call, Response<ListaParadas> response) {
-                if (response.isSuccessful()) {
-                    aux = response.body().getArrives();
-
-                    if (aux.size() > 0) {
-
-                    }
-
-
-
-
-
-
-                } else {
-
-                }
+            public void onResponse(Call<ListaLlegadas> call, Response<ListaLlegadas> response) {
+                ActividadPrincipal.setLlegadas(response.body());
             }
 
             @Override
-            public void onFailure(Call<ListaParadas> call, Throwable t) {
+            public void onFailure(Call<ListaLlegadas> call, Throwable t) {
 
             }
         });
+
+
     }
+    public void getLineas() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
+        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);
+        RequestBody pass = RequestBody.create(MediaType.parse("text/plain"), API_PASSKEY);
+        RequestBody date = RequestBody.create(MediaType.parse("text/plain"), currentTimeStamp);
+        Call<ListaLineas> llamada = con.getListLines(id,pass,date);
 
-    public String tiempoParada(int parada) {
+        llamada.enqueue(new Callback<ListaLineas>() {
+            @Override
+            public void onResponse(Call<ListaLineas> call, Response<ListaLineas> response) {
+                ActividadPrincipal.setLineas(response.body());
+            }
 
+            @Override
+            public void onFailure(Call<ListaLineas> call, Throwable t) {
 
-
-        if (aux.size() == 0) return new String("ERROR");
-        return aux.get(0).toString();
+            }
+        });
     }
 
 
