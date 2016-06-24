@@ -20,6 +20,7 @@ import pad.ucm.fdi.emtalk.modelo.GestorConexion;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 
 public class ActividadPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,6 +28,7 @@ public class ActividadPrincipal extends AppCompatActivity
     private GestorConexion gestor;
     private static ListaLlegadas lista;
     private static ListaLineas listaLineas;
+    private static ListaParadas paradas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class ActividadPrincipal extends AppCompatActivity
         setSupportActionBar(toolbar);
         texto =(TextView) findViewById(R.id.boton);
         gestor = new GestorConexion();
-        gestor.getLineas();
+        gestor.getParadasLinea("132");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,5 +119,9 @@ public class ActividadPrincipal extends AppCompatActivity
     public static void setLineas(ListaLineas lista) {
         listaLineas = lista;
         texto.setText(lista.getResultDescription());
+    }
+    public static void setParadas(ListaParadas lista) {
+        paradas = lista;
+        texto.setText(paradas.getDestination()+ paradas.getLabel());
     }
 }

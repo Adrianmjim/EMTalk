@@ -15,6 +15,7 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +56,25 @@ public class GestorConexion {
             }
         });
 
+
+    }
+    public void getParadasLinea(String linea) {
+        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);
+        RequestBody pass = RequestBody.create(MediaType.parse("text/plain"), API_PASSKEY);
+        RequestBody num = RequestBody.create(MediaType.parse("text/plain"), linea);
+        Call<ListaParadas> llamada = con.getStopLine(id,pass,num);
+
+        llamada.enqueue(new Callback<ListaParadas>() {
+            @Override
+            public void onResponse(Call<ListaParadas> call, Response<ListaParadas> response) {
+                ActividadPrincipal.setParadas(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ListaParadas> call, Throwable t) {
+                ActividadPrincipal.respuesta(t.getMessage());
+            }
+        });
 
     }
     public void getLineas() {
