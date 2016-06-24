@@ -1,11 +1,11 @@
-package fdi.ucm.pad.emtalk.modelo;
+package pad.ucm.fdi.emtalk.modelo;
 
 
 import java.util.List;
 
-import fdi.ucm.pad.emtalk.modelo.tiposApi.ListaParadas;
-import fdi.ucm.pad.emtalk.modelo.tiposApi.Parada;
-import fdi.ucm.pad.emtalk.modelo.tiposApi.Arrive;
+
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.Parada;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;

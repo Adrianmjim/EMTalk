@@ -1,14 +1,13 @@
-package fdi.ucm.pad.emtalk.modelo;
+package pad.ucm.fdi.emtalk.modelo;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-import fdi.ucm.pad.emtalk.ActividadPrincipal;
-import fdi.ucm.pad.emtalk.modelo.tiposApi.Arrive;
-
-import fdi.ucm.pad.emtalk.modelo.tiposApi.ListaParadas;
-
-import fdi.ucm.pad.emtalk.modelo.tiposApi.Parada;
+import pad.ucm.fdi.emtalk.ActividadPrincipal;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.Parada;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +41,7 @@ public class GestorConexion {
                     aux = response.body().getArrives();
 
                     if (aux.size() > 0) {
-                        ActividadPrincipal.respuesta(aux.get(0).toString());
+
                     }
 
 
@@ -51,13 +50,13 @@ public class GestorConexion {
 
 
                 } else {
-                    ActividadPrincipal.respuesta("no hay respuesta");
+
                 }
             }
 
             @Override
             public void onFailure(Call<ListaParadas> call, Throwable t) {
-                ActividadPrincipal.respuesta(t.toString());
+
             }
         });
     }

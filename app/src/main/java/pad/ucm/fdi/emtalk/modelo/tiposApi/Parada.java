@@ -1,4 +1,4 @@
-package fdi.ucm.pad.emtalk.modelo.tiposApi;
+package pad.ucm.fdi.emtalk.modelo.tiposApi;
 
 import com.google.gson.annotations.SerializedName;
 
