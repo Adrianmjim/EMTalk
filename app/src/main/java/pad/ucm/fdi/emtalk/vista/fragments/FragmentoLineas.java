@@ -1,47 +1,59 @@
-package pad.ucm.fdi.emtalk.vista;
+package pad.ucm.fdi.emtalk.vista.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pad.ucm.fdi.emtalk.R;
+import pad.ucm.fdi.emtalk.modelo.GestorConexion;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ResultValue;
+import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorLinea;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragmentoBusqueda.OnFragmentInteractionListener} interface
+ * {@link FragmentoLineas.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentoBusqueda#newInstance} factory method to
+ * Use the {@link FragmentoLineas#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentoBusqueda extends Fragment {
-    private EditText parada;
-    private Button buscar;
-    private OnFragmentInteractionListener mListener;
+public class FragmentoLineas extends Fragment {
 
-    public FragmentoBusqueda() {
+    private ListView vista;
+    private List<ResultValue> lineas;
+    private OnFragmentInteractionListener mListener;
+    private AdaptadorLinea adaptador;
+    public FragmentoLineas() {
         // Required empty public constructor
     }
-
+    public void setLineas(ListaLineas l) {
+        lineas = l.getResultValues();
+        adaptador = new AdaptadorLinea(getActivity(),lineas);
+        vista.setAdapter(adaptador);
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentoBusqueda.
+     * @return A new instance of fragment FragmentoLineas.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentoBusqueda newInstance(String param1, String param2) {
-        FragmentoBusqueda fragment = new FragmentoBusqueda();
+    public static FragmentoLineas newInstance(String param1, String param2) {
+        FragmentoLineas fragment = new FragmentoLineas();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,9 +61,6 @@ public class FragmentoBusqueda extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
 
     }
 
@@ -59,20 +68,11 @@ public class FragmentoBusqueda extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_fragmento_busqueda, container, false);
-        parada =(EditText) v.findViewById(R.id.parada);
-        buscar =(Button) v.findViewById(R.id.buscar);
-        buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), ActividadParada.class);
-                i.putExtra("parada", parada.getText().toString());
-                startActivity(i);
-
-            }
-        });
+        View v = inflater.inflate(R.layout.fragment_fragmento_lineas, container, false);
+        vista = (ListView) v.findViewById(R.id.listaLineas);
+        GestorConexion g = new GestorConexion(this);
+        g.getLineas();
         return v;
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

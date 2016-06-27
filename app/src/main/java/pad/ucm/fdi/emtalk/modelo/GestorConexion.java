@@ -13,6 +13,7 @@ import pad.ucm.fdi.emtalk.vista.ActividadPrincipal;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
+import pad.ucm.fdi.emtalk.vista.fragments.FragmentoLineas;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,19 +30,28 @@ public class GestorConexion {
     private final String API_PASSKEY = "56B93B0E-5E42-4E64-BEE1-44977F5379CA";
     private Conexion con;
     private ActividadParada actividad;
+    private FragmentoLineas fragmento;
     public GestorConexion() {
 
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         con = retrofit.create(Conexion.class);
+        actividad = null;
+        fragmento = null;
 
     }
     public GestorConexion(ActividadParada actividad) {
         this.actividad = actividad;
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         con = retrofit.create(Conexion.class);
+        fragmento = null;
     }
-
+    public GestorConexion(FragmentoLineas fragment) {
+        fragmento = fragment;
+        retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        con = retrofit.create(Conexion.class);
+        actividad = null;
+    }
     public void  getLlegadas(String parada) {
         RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);
         RequestBody pass = RequestBody.create(MediaType.parse("text/plain"), API_PASSKEY);
@@ -83,7 +93,7 @@ public class GestorConexion {
     }
     public void getLineas() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-        String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
+        String currentTimeStamp = dateFormat.format(new Date());
         RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);
         RequestBody pass = RequestBody.create(MediaType.parse("text/plain"), API_PASSKEY);
         RequestBody date = RequestBody.create(MediaType.parse("text/plain"), currentTimeStamp);
@@ -92,7 +102,7 @@ public class GestorConexion {
         llamada.enqueue(new Callback<ListaLineas>() {
             @Override
             public void onResponse(Call<ListaLineas> call, Response<ListaLineas> response) {
-                ActividadPrincipal.setLineas(response.body());
+                fragmento.setLineas(response.body());
             }
 
             @Override

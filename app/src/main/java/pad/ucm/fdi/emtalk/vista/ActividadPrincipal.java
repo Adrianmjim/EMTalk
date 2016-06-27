@@ -20,17 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.List;
-
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
-import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
+import pad.ucm.fdi.emtalk.vista.fragments.FragmentoBusqueda;
+import pad.ucm.fdi.emtalk.vista.fragments.FragmentoLineas;
 
 public class ActividadPrincipal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener, FragmentoLineas.OnFragmentInteractionListener {
     private static TextView texto;
     private GestorConexion gestor;
     private static ListaLlegadas lista;
@@ -102,16 +101,20 @@ public class ActividadPrincipal extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            
 
         } else if (id == R.id.nav_gallery) {
             FragmentManager f = getFragmentManager();
             FragmentTransaction t = f.beginTransaction();
             FragmentoBusqueda b = FragmentoBusqueda.newInstance(null, null);
-            t.add(R.id.contenedor, b);
+            t.replace(R.id.contenedor, b);
             t.commit();
         } else if (id == R.id.nav_slideshow) {
-
+            FragmentManager f = getFragmentManager();
+            FragmentTransaction t = f.beginTransaction();
+            FragmentoLineas b = FragmentoLineas.newInstance(null, null);
+            t.replace(R.id.contenedor, b);
+            t.commit();
         } else if (id == R.id.nav_manage) {
 
         }
