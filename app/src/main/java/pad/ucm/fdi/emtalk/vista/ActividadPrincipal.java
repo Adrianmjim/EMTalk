@@ -1,8 +1,14 @@
-package pad.ucm.fdi.emtalk;
+package pad.ucm.fdi.emtalk.vista;
 
+
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
+
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
@@ -23,7 +30,7 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 
 public class ActividadPrincipal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener {
     private static TextView texto;
     private GestorConexion gestor;
     private static ListaLlegadas lista;
@@ -35,9 +42,8 @@ public class ActividadPrincipal extends AppCompatActivity
         setContentView(R.layout.activity_actividad_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        texto =(TextView) findViewById(R.id.boton);
-        gestor = new GestorConexion();
-        gestor.getParadasLinea("132");
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,9 +62,7 @@ public class ActividadPrincipal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-    public static void respuesta(String entrada) {
-        texto.setText(entrada);
-    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -101,7 +105,11 @@ public class ActividadPrincipal extends AppCompatActivity
             // Handle the camera action
 
         } else if (id == R.id.nav_gallery) {
-
+            FragmentManager f = getFragmentManager();
+            FragmentTransaction t = f.beginTransaction();
+            FragmentoBusqueda b = FragmentoBusqueda.newInstance(null, null);
+            t.add(R.id.contenedor, b);
+            t.commit();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -114,14 +122,24 @@ public class ActividadPrincipal extends AppCompatActivity
     }
     public static void setLlegadas(ListaLlegadas lista2) {
         lista = lista2;
-        texto.setText(lista.getArrives().get(0).toString());
+        String aux = "";
+        for (int i = 0; i < lista.getArrives().size(); i++) {
+            aux += lista.getArrives().get(i).toString();
+            aux += "\n";
+        }
+        texto.setText(aux);
     }
     public static void setLineas(ListaLineas lista) {
         listaLineas = lista;
         texto.setText(lista.getResultDescription());
     }
-    public static void setParadas(ListaParadas lista) {
-        paradas = lista;
+    public static void setParadas(ListaParadas lista3) {
+        paradas = lista3;
         texto.setText(paradas.getDestination()+ paradas.getLabel());
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
