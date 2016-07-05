@@ -3,6 +3,7 @@ package pad.ucm.fdi.emtalk.vista;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
@@ -27,28 +31,30 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 import pad.ucm.fdi.emtalk.vista.fragments.FragmentoBusqueda;
 import pad.ucm.fdi.emtalk.vista.fragments.FragmentoLineas;
+import pad.ucm.fdi.emtalk.vista.fragments.FragmentoMisParadas;
 
 public class ActividadPrincipal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener, FragmentoLineas.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener, FragmentoLineas.OnFragmentInteractionListener, FragmentoMisParadas.OnFragmentInteractionListener {
     private static TextView texto;
     private GestorConexion gestor;
     private static ListaLlegadas lista;
     private static ListaLineas listaLineas;
     private static ListaParadas paradas;
+    private List<Integer> paradasFavoritas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        paradasFavoritas = new ArrayList<Integer>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(view.getContext(), ActividadAdd.class);
+                startActivity(i);
             }
         });
 
@@ -71,7 +77,13 @@ public class ActividadPrincipal extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if (resultCode == RESULT_OK) {
+            paradasFavoritas.add(Integer.getInteger(data.getExtras().get("text").toString()));
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -101,7 +113,11 @@ public class ActividadPrincipal extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            
+            FragmentManager f = getFragmentManager();
+            FragmentTransaction t = f.beginTransaction();
+            FragmentoMisParadas b = FragmentoMisParadas.newInstance(paradasFavoritas);
+            t.replace(R.id.contenedor, b);
+            t.commit();
 
         } else if (id == R.id.nav_gallery) {
             FragmentManager f = getFragmentManager();
@@ -140,6 +156,7 @@ public class ActividadPrincipal extends AppCompatActivity
         paradas = lista3;
         texto.setText(paradas.getDestination()+ paradas.getLabel());
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

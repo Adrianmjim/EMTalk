@@ -1,9 +1,10 @@
 package pad.ucm.fdi.emtalk.vista.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.List;
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ResultValue;
 import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorLinea;
+import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorParadas;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,25 +27,20 @@ import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorLinea;
  */
 public class FragmentoMisParadas extends Fragment {
     private ListView vista;
-    private List<Integer> paradas;
+    private static List<Integer> paradas;
     private OnFragmentInteractionListener mListener;
-    private AdaptadorLinea adaptador;
+    private AdaptadorParadas adaptador;
     public FragmentoMisParadas() {
         // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentoMisParadas.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentoMisParadas newInstance(String param1, String param2) {
+
+    public static FragmentoMisParadas newInstance(List<Integer> favoritas) {
+        paradas = favoritas;
         FragmentoMisParadas fragment = new FragmentoMisParadas();
         Bundle args = new Bundle();
+
 
         fragment.setArguments(args);
         return fragment;
@@ -60,8 +57,12 @@ public class FragmentoMisParadas extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_fragmento_mis_paradas, container, false);
+        vista = (ListView) v.findViewById(R.id.misParadas);
+        adaptador = new AdaptadorParadas(getActivity(),paradas);
+        vista.setAdapter(adaptador);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragmento_mis_paradas, container, false);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

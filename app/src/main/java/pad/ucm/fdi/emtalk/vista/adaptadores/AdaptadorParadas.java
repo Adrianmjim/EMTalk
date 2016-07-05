@@ -7,15 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ResultValue;
 
 /**
  * Created by adrian on 27/06/16.
  */
 public class AdaptadorParadas extends ArrayAdapter<Integer> {
-    public AdaptadorParadas(Context context, int resource) {
-        super(context, resource);
+    public AdaptadorParadas(Context context, List<Integer> a) {
+        super(context, R.layout.view_parada, a);
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
