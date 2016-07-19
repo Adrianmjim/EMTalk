@@ -37,9 +37,7 @@ public class ActividadPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener, FragmentoLineas.OnFragmentInteractionListener, FragmentoMisParadas.OnFragmentInteractionListener {
     private static TextView texto;
     private GestorConexion gestor;
-    private static ListaLlegadas lista;
-    private static ListaLineas listaLineas;
-    private static ListaParadas paradas;
+
     private List<Integer> paradasFavoritas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,23 +137,7 @@ public class ActividadPrincipal extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public static void setLlegadas(ListaLlegadas lista2) {
-        lista = lista2;
-        String aux = "";
-        for (int i = 0; i < lista.getArrives().size(); i++) {
-            aux += lista.getArrives().get(i).toString();
-            aux += "\n";
-        }
-        texto.setText(aux);
-    }
-    public static void setLineas(ListaLineas lista) {
-        listaLineas = lista;
-        texto.setText(lista.getResultDescription());
-    }
-    public static void setParadas(ListaParadas lista3) {
-        paradas = lista3;
-        texto.setText(paradas.getDestination()+ paradas.getLabel());
-    }
+
 
 
     @Override

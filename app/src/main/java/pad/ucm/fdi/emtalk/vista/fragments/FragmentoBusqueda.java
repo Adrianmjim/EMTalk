@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.vista.ActividadParada;
@@ -63,6 +65,22 @@ public class FragmentoBusqueda extends Fragment {
         View v = inflater.inflate(R.layout.fragment_fragmento_busqueda, container, false);
         parada =(EditText) v.findViewById(R.id.parada);
         buscar =(Button) v.findViewById(R.id.buscar);
+        parada.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int in, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (in == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    Intent i = new Intent(getActivity(), ActividadParada.class);
+                    i.putExtra("parada", parada.getText().toString());
+                    startActivity(i);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
         buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

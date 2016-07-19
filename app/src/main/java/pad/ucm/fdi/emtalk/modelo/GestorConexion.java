@@ -81,7 +81,7 @@ public class GestorConexion {
         llamada.enqueue(new Callback<ListaParadas>() {
             @Override
             public void onResponse(Call<ListaParadas> call, Response<ListaParadas> response) {
-                ActividadPrincipal.setParadas(response.body());
+
             }
 
             @Override
