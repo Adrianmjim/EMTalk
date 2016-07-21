@@ -9,6 +9,7 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,12 +51,6 @@ public class ActividadParada extends AppCompatActivity {
         vistaPrueba.setLayoutManager(layout);
         info = new ArrayList<Arrive>();
         // specify an adapter (see also next example)
-        vistaPrueba.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                super.onDraw(c, parent, state);
-            }
-        });
 
 
         g.getLlegadas(parada);

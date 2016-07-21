@@ -32,10 +32,13 @@ public class AdaptadorLinea extends RecyclerView.Adapter<AdaptadorLinea.ViewHold
         return vh;
     }
 
+    public AdaptadorLinea(List<ResultValue> lineas) {
+        this.lineas = lineas;
+    }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(lineas.get(position).getLine());
-        holder.mTextView2.setText(lineas.get(position).getNameA() + lineas.get(position).getNameB());
+        holder.mTextView.setText(lineas.get(position).getLabel());
+        holder.mTextView2.setText(lineas.get(position).getNameA() + "-" + lineas.get(position).getNameB());
     }
 
     @Override

@@ -99,7 +99,7 @@ public class GestorConexion {
         llamada.enqueue(new Callback<ListaLineas>() {
             @Override
             public void onResponse(Call<ListaLineas> call, Response<ListaLineas> response) {
-
+                fragmento.setLineas(response.body());
             }
 
             @Override

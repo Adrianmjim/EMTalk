@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="65dp"
+    android:layout_height="66dp"
     android:background="#FFFFFF"
-    android:layout_marginBottom="1dp">
+    android:layout_marginBottom="3dp"
+    android:layout_marginTop="3dp"
+
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="6dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
         android:id="@+id/autobus"
         android:textColor="@color/abc_btn_colored_borderless_text_material"
         android:textStyle="bold" />
@@ -15,10 +20,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
         android:id="@+id/tiempo"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
+        android:layout_marginLeft="2dp"
         android:id="@+id/metros" />
 </LinearLayout>

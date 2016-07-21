@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,7 @@ import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorLinea;
 public class FragmentoLineas extends Fragment {
     private RecyclerView vistaPrueba;
 
-    private ListView vista;
+
 
     private OnFragmentInteractionListener mListener;
     private AdaptadorLinea adaptador;
@@ -39,6 +40,11 @@ public class FragmentoLineas extends Fragment {
         // Required empty public constructor
     }
 
+    public void setLineas(ListaLineas lista) {
+        adaptador = new AdaptadorLinea(lista.getResultValues());
+        vistaPrueba.setAdapter(adaptador);
+
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -67,7 +73,8 @@ public class FragmentoLineas extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_fragmento_lineas, container, false);
-        vista = (ListView) v.findViewById(R.id.listaLineas);
+        vistaPrueba = (RecyclerView) v.findViewById(R.id.listaLineas);
+        vistaPrueba.setLayoutManager(new LinearLayoutManager(getActivity()));
         GestorConexion g = new GestorConexion(this);
         g.getLineas();
         return v;
