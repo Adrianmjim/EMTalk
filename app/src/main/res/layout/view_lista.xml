@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="65dp"
+    android:background="#FFFFFF"
+    android:layout_marginBottom="1dp">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:id="@+id/autobus"/>
+        android:layout_height="20dp"
+        android:id="@+id/autobus"
+        android:textColor="@color/abc_btn_colored_borderless_text_material"
+        android:textStyle="bold" />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="20dp"
         android:id="@+id/tiempo"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/metros" />
 </LinearLayout>

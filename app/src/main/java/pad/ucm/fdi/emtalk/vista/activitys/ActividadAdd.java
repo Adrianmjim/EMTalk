@@ -1,4 +1,4 @@
-package pad.ucm.fdi.emtalk.vista;
+package pad.ucm.fdi.emtalk.vista.activitys;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -1,5 +1,6 @@
-package pad.ucm.fdi.emtalk.vista;
+package pad.ucm.fdi.emtalk.vista.activitys;
 
+import android.graphics.Canvas;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -17,13 +18,12 @@ import java.util.List;
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorLlegada;
-import pad.ucm.fdi.emtalk.vista.adaptadores.adaptadorPrueba;
 
 public class ActividadParada extends AppCompatActivity {
 
     private static TextView parada;
     private RecyclerView vistaPrueba;
-    private adaptadorPrueba adapter;
+    private AdaptadorLlegada adapter;
     private RecyclerView.LayoutManager layout;
     private List<Arrive> info;
 
@@ -50,7 +50,12 @@ public class ActividadParada extends AppCompatActivity {
         vistaPrueba.setLayoutManager(layout);
         info = new ArrayList<Arrive>();
         // specify an adapter (see also next example)
-
+        vistaPrueba.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                super.onDraw(c, parent, state);
+            }
+        });
 
 
         g.getLlegadas(parada);
@@ -60,7 +65,7 @@ public class ActividadParada extends AppCompatActivity {
     }
     public void setInfo(ListaLlegadas l) {
         info = l.getArrives();
-        adapter = new adaptadorPrueba(l.getArrives());
+        adapter = new AdaptadorLlegada(l.getArrives());
         vistaPrueba.setAdapter(adapter);
         String aux = "Parada "+ info.get(0).getStopId().toString();
         this.parada.setText(aux);

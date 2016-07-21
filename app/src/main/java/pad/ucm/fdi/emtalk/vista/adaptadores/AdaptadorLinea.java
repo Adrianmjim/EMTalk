@@ -1,6 +1,7 @@
 package pad.ucm.fdi.emtalk.vista.adaptadores;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,29 +19,45 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.ResultValue;
 /**
  * Created by adrian on 27/06/16.
  */
-public class AdaptadorLinea extends ArrayAdapter<ResultValue>{
+public class AdaptadorLinea extends RecyclerView.Adapter<AdaptadorLinea.ViewHolder> {
+    private List<ResultValue> lineas;
 
-    public AdaptadorLinea(Context context, List<ResultValue> a) {
-        super(context, R.layout.view_linea, a);
-    }
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        ResultValue a = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.view_linea, parent, false);
-        }
-        // Lookup view for data population
-        TextView numero = (TextView) convertView.findViewById(R.id.numeroLinea);
-        TextView direccion = (TextView) convertView.findViewById(R.id.direccion);
-        // Populate the data into the template view using the data object
-        if (a != null) {
-            numero.setText(a.getLabel());
-            direccion.setText(a.getNameA()+ "-"+a.getNameB());
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_linea, parent, false);
+        // set the view's size, margins, paddings and layout parameters
+
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.mTextView.setText(lineas.get(position).getLine());
+        holder.mTextView2.setText(lineas.get(position).getNameA() + lineas.get(position).getNameB());
+    }
+
+    @Override
+    public int getItemCount() {
+        return lineas.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public TextView mTextView;
+        public TextView mTextView2;
+
+        public ViewHolder(TextView v, TextView v2) {
+            super(v);
+            mTextView = v;
+            mTextView2 = v2;
         }
 
-        // Return the completed view to render on screen
-        return convertView;
+        public ViewHolder(View v) {
+            super(v);
+            mTextView = (TextView) itemView.findViewById(R.id.numeroLinea);
+            mTextView2 = (TextView) itemView.findViewById(R.id.direccion);
+        }
     }
 }

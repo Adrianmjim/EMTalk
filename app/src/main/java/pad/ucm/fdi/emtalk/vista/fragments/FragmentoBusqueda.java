@@ -11,10 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import pad.ucm.fdi.emtalk.R;
-import pad.ucm.fdi.emtalk.vista.ActividadParada;
+import pad.ucm.fdi.emtalk.vista.activitys.ActividadParada;
 
 /**
  * A simple {@link Fragment} subclass.

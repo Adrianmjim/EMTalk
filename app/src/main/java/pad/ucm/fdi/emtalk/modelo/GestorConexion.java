@@ -1,15 +1,12 @@
 package pad.ucm.fdi.emtalk.modelo;
 
 
-import android.app.Activity;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import pad.ucm.fdi.emtalk.vista.ActividadParada;
-import pad.ucm.fdi.emtalk.vista.ActividadPrincipal;
+import pad.ucm.fdi.emtalk.vista.activitys.ActividadParada;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
@@ -102,7 +99,7 @@ public class GestorConexion {
         llamada.enqueue(new Callback<ListaLineas>() {
             @Override
             public void onResponse(Call<ListaLineas> call, Response<ListaLineas> response) {
-                fragmento.setLineas(response.body());
+
             }
 
             @Override

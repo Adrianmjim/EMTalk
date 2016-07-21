@@ -1,4 +1,4 @@
-package pad.ucm.fdi.emtalk.vista;
+package pad.ucm.fdi.emtalk.vista.activitys;
 
 
 import android.app.FragmentManager;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
 
 import android.view.View;
@@ -26,9 +25,7 @@ import java.util.List;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
-import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
-import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
-import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
+import pad.ucm.fdi.emtalk.vista.activitys.ActividadAdd;
 import pad.ucm.fdi.emtalk.vista.fragments.FragmentoBusqueda;
 import pad.ucm.fdi.emtalk.vista.fragments.FragmentoLineas;
 import pad.ucm.fdi.emtalk.vista.fragments.FragmentoMisParadas;

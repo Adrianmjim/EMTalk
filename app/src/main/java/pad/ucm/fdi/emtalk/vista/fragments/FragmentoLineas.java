@@ -32,17 +32,13 @@ public class FragmentoLineas extends Fragment {
     private RecyclerView vistaPrueba;
 
     private ListView vista;
-    private List<ResultValue> lineas;
+
     private OnFragmentInteractionListener mListener;
     private AdaptadorLinea adaptador;
     public FragmentoLineas() {
         // Required empty public constructor
     }
-    public void setLineas(ListaLineas l) {
-        lineas = l.getResultValues();
-        adaptador = new AdaptadorLinea(getActivity(),lineas);
-        vista.setAdapter(adaptador);
-    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
