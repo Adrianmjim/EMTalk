@@ -1,5 +1,7 @@
 package pad.ucm.fdi.emtalk.vista;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,8 +12,9 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,9 +22,9 @@ import java.util.List;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
-import pad.ucm.fdi.emtalk.vista.AdaptadorLlegada;
 
-public class ActividadParada extends AppCompatActivity {
+
+public class ActividadParada extends AppCompatActivity implements Observer{
 
     private static TextView parada;
     private RecyclerView vistaPrueba;
@@ -39,7 +42,7 @@ public class ActividadParada extends AppCompatActivity {
         setContentView(R.layout.activity_actividad_parada);
         Bundle b = getIntent().getExtras();
         String parada = b.getString("parada");
-        GestorConexion g = new GestorConexion(this);
+        GestorConexion g = new GestorConexion();
         this.parada = (TextView) findViewById(R.id.paradaAsiganada);
         vistaPrueba = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -52,14 +55,15 @@ public class ActividadParada extends AppCompatActivity {
         vistaPrueba.setLayoutManager(layout);
         info = new ArrayList<Arrive>();
         // specify an adapter (see also next example)
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         g.getLlegadas(parada);
-
+        g.addObserver(this);
 
 
     }
-    public void setInfo(ListaLlegadas l) {
+    private void setInfo(ListaLlegadas l) {
         info = l.getArrives();
         adapter = new AdaptadorLlegada(l.getArrives());
         vistaPrueba.setAdapter(adapter);
@@ -69,7 +73,31 @@ public class ActividadParada extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.parada, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.add_phrase:
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("stop", info.get(0).getStopId());
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-
+    @Override
+    public void updateStop(ListaLlegadas llegadas) {
+        setInfo(llegadas);
+    }
 }

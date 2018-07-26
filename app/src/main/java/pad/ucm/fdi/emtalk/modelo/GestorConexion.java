@@ -4,7 +4,9 @@ package pad.ucm.fdi.emtalk.modelo;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -14,6 +16,8 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 
 import pad.ucm.fdi.emtalk.vista.ActividadParada;
+import pad.ucm.fdi.emtalk.vista.Observable;
+import pad.ucm.fdi.emtalk.vista.Observer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,27 +27,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by adrian on 28/04/16.
  */
-public class GestorConexion {
+public class GestorConexion implements Observable<Observer> {
     private Retrofit retrofit;
     private final String BASE_URL = "https://openbus.emtmadrid.es:9443/emt-proxy-server/last/";
     private final String API_CLIENT_ID = "WEB.SERV.adrima05@ucm.es";
     private final String API_PASSKEY = "56B93B0E-5E42-4E64-BEE1-44977F5379CA";
     private Conexion con;
-    private ActividadParada actividad;
-    public GestorConexion(ActividadParada actividad) {
 
-        this.actividad = actividad;
-        retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-        con = retrofit.create(Conexion.class);
-
-
-    }
+    private List<Observer> observers;
     public GestorConexion() {
 
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         con = retrofit.create(Conexion.class);
-
+        observers = new ArrayList<>();
 
     }
 
@@ -56,7 +53,7 @@ public class GestorConexion {
         llamada.enqueue(new Callback<ListaLlegadas>() {
             @Override
             public void onResponse(Call<ListaLlegadas> call, Response<ListaLlegadas> response) {
-                actividad.setInfo(response.body());
+                for (Observer i: observers) i.updateStop(response.body());
             }
 
             @Override
@@ -108,4 +105,13 @@ public class GestorConexion {
     }
 
 
+    @Override
+    public void addObserver(Observer obv) {
+        observers.add(obv);
+    }
+
+    @Override
+    public void delObserver(Observer obv) {
+        observers.remove(obv);
+    }
 }

@@ -1,5 +1,6 @@
 package pad.ucm.fdi.emtalk.vista;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,12 +28,19 @@ import java.util.prefs.Preferences;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
+import pad.ucm.fdi.emtalk.modelo.ParadaFavorita;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener , Observer{
+    private static final int MY_CHILD_ACTIVITY = 123;
     private GestorConexion modelo;
     private RecyclerView lista;
+    private AdaptadorFavoritas adaptadorFavoritas;
+
+    private int numStop;
+    private List<ParadaFavorita> stops;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +52,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Snackbar mySnackbar = Snackbar.make(view, "Este es el botón que pulsan todos los tontos. Te he pillao eh.", 15);
+                mySnackbar.show();
+                addStop(1512);
             }
         });
 
@@ -53,21 +63,24 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        SharedPreferences set = getPreferences(0);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         modelo = new GestorConexion();
         lista = (RecyclerView) findViewById(R.id.favoritas);
         lista.setHasFixedSize(true);
-
+        stops = new ArrayList<>();
         // use a linear layout manager
         lista.setLayoutManager(new LinearLayoutManager(this));
-        set.getAll();
-        List<Integer> list = new ArrayList<>();
-        list.add(123);
-        list.add(234);
-        list.add(345);
-        lista.setAdapter(new AdaptadorFavoritas(list));
+        SharedPreferences set = getPreferences(0);
+        numStop = set.getInt("numStop", 0);
+        for (int i = 0; i < numStop; i++) {
+            modelo.getLlegadas(String.valueOf(set.getInt("value"+i, 0)));
+        }
+        adaptadorFavoritas = new AdaptadorFavoritas(stops);
+
+        lista.setAdapter(adaptadorFavoritas);
+        modelo.addObserver(this);
+
     }
 
     @Override
@@ -112,7 +125,7 @@ public class MainActivity extends AppCompatActivity
     private void lanzar(String query) {
         Intent i = new Intent(this, ActividadParada.class);
         i.putExtra("parada", query);
-        startActivity(i);
+        startActivityForResult(i, MY_CHILD_ACTIVITY);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -137,20 +150,48 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void addStop(int stop) {
+        SharedPreferences set = getPreferences(0);
+        SharedPreferences.Editor editor = set.edit();
+        editor.putInt("value"+numStop, stop);
+        editor.putInt("numStop", ++numStop);
+        modelo.getLlegadas(String.valueOf(stop));
+        editor.commit();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (MY_CHILD_ACTIVITY) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    // TODO Extract the data returned from the child Activity.
+                    int returnValue = data.getIntExtra("stop", 0);
+                    addStop(returnValue);
+
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void updateStop(ListaLlegadas llegadas) {
+        String aux = "";
+        List<String> list = new ArrayList<>();
+        for (Arrive i: llegadas.getArrives()) {
+            if (!list.contains(i.getBusId())) list.add(i.getBusId());
+        }
+        for (int i = 0; i < list.size(); i++) {
+            aux += list.get(i);
+            if(i < list.size()-1) aux += " - ";
+        }
+        stops.add(new ParadaFavorita(llegadas.getArrives().get(0).getStopId(), aux));
+        adaptadorFavoritas.notifyItemInserted(stops.size());
     }
 }
