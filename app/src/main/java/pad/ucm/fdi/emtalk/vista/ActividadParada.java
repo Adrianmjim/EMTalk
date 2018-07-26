@@ -1,4 +1,4 @@
-package pad.ucm.fdi.emtalk.vista.activitys;
+package pad.ucm.fdi.emtalk.vista;
 
 import android.graphics.Canvas;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,7 +19,7 @@ import java.util.List;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
-import pad.ucm.fdi.emtalk.vista.adaptadores.AdaptadorLlegada;
+import pad.ucm.fdi.emtalk.vista.AdaptadorLlegada;
 
 public class ActividadParada extends AppCompatActivity {
 
@@ -64,6 +65,7 @@ public class ActividadParada extends AppCompatActivity {
         vistaPrueba.setAdapter(adapter);
         String aux = "Parada "+ info.get(0).getStopId().toString();
         this.parada.setText(aux);
+        Log.d("PRUEBA", "LLEGA");
 
     }
 

@@ -1,14 +1,15 @@
-package pad.ucm.fdi.emtalk.vista.activitys;
+package pad.ucm.fdi.emtalk.vista;
 
-
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-
-
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,49 +19,55 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
-import pad.ucm.fdi.emtalk.vista.activitys.ActividadAdd;
-import pad.ucm.fdi.emtalk.vista.fragments.FragmentoBusqueda;
-import pad.ucm.fdi.emtalk.vista.fragments.FragmentoLineas;
-import pad.ucm.fdi.emtalk.vista.fragments.FragmentoMisParadas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 
-public class ActividadPrincipal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentoBusqueda.OnFragmentInteractionListener, FragmentoLineas.OnFragmentInteractionListener, FragmentoMisParadas.OnFragmentInteractionListener {
-    private static TextView texto;
-    private GestorConexion gestor;
-
-    private List<Integer> paradasFavoritas;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+    private GestorConexion modelo;
+    private RecyclerView lista;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actividad_principal);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        paradasFavoritas = new ArrayList<Integer>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), ActividadAdd.class);
-                startActivity(i);
+
             }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
-
+        SharedPreferences set = getPreferences(0);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        modelo = new GestorConexion();
+        lista = (RecyclerView) findViewById(R.id.favoritas);
+        lista.setHasFixedSize(true);
+
+        // use a linear layout manager
+        lista.setLayoutManager(new LinearLayoutManager(this));
+        set.getAll();
+        List<Integer> list = new ArrayList<>();
+        list.add(123);
+        list.add(234);
+        list.add(345);
+        lista.setAdapter(new AdaptadorFavoritas(list));
     }
 
     @Override
@@ -72,20 +79,41 @@ public class ActividadPrincipal extends AppCompatActivity
             super.onBackPressed();
         }
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        if (resultCode == RESULT_OK) {
-            paradasFavoritas.add(Integer.getInteger(data.getExtras().get("text").toString()));
-        }
-    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.actividad_principal, menu);
-        return true;
-    }
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
 
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //permite modificar el hint que el EditText muestra por defecto
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                lanzar(query);
+                //se oculta el EditText
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return true;
+            }
+        });
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    private void lanzar(String query) {
+        Intent i = new Intent(this, ActividadParada.class);
+        i.putExtra("parada", query);
+        startActivity(i);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -108,37 +136,21 @@ public class ActividadPrincipal extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            FragmentManager f = getFragmentManager();
-            FragmentTransaction t = f.beginTransaction();
-            FragmentoMisParadas b = FragmentoMisParadas.newInstance(paradasFavoritas);
-            t.replace(R.id.contenedor, b);
-            t.commit();
-
+            // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            FragmentManager f = getFragmentManager();
-            FragmentTransaction t = f.beginTransaction();
-            FragmentoBusqueda b = FragmentoBusqueda.newInstance(null, null);
-            t.replace(R.id.contenedor, b);
-            t.commit();
+
         } else if (id == R.id.nav_slideshow) {
-            FragmentManager f = getFragmentManager();
-            FragmentTransaction t = f.beginTransaction();
-            FragmentoLineas b = FragmentoLineas.newInstance(null, null);
-            t.replace(R.id.contenedor, b);
-            t.commit();
+
         } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
