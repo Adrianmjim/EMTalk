@@ -35,19 +35,19 @@ public class AdaptadorLlegada extends RecyclerView.Adapter<AdaptadorLlegada.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(info.get(position).getLineId());
+        holder.mTextView.setText("Linea "+info.get(position).getLineId());
         holder.mTextView2.setText(fixTime(info.get(position).getBusTimeLeft()));
         holder.mTextView3.setText(info.get(position).getBusDistance() + " metros");
     }
     private String fixTime(Integer time) {
         if (time < 60) {
-            return time.toString() + " seg.";
+            return time.toString() + " segundos.";
         } else if (time == 999999) {
-            return ">20 min.";
+            return "Más de 20 minutos.";
         } else {
             Integer minutos = time / 60;
             Integer segundos = time % 60;
-            return minutos.toString() + " min. y " + segundos.toString() + " seg.";
+            return minutos.toString() + " minutos y " + segundos.toString() + " segundos.";
         }
     }
     @Override

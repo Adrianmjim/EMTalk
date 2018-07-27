@@ -18,22 +18,24 @@ import pad.ucm.fdi.emtalk.vista.AdaptadorLlegada;
 
 public class AdaptadorFavoritas extends RecyclerView.Adapter<AdaptadorFavoritas.ViewHolder> {
     private List<ParadaFavorita> list;
-    public AdaptadorFavoritas(List<ParadaFavorita> list) {
+    private View.OnClickListener listener;
+    public AdaptadorFavoritas(View.OnClickListener listener, List<ParadaFavorita> list) {
         this.list = list;
+        this.listener = listener;
     }
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_parada, parent, false);
         // set the view's size, margins, paddings and layout parameters
-
+        v.setOnClickListener(listener);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mTextView.setText(String.valueOf(list.get(position).getParada()));
+        holder.mTextView.setText("Parada "+String.valueOf(list.get(position).getParada()));
         holder.mTextView2.setText("Lineas: "+list.get(position).getLineas());
     }
 

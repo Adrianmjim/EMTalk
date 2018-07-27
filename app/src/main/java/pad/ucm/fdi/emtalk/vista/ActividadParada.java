@@ -3,6 +3,7 @@ package pad.ucm.fdi.emtalk.vista;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -31,7 +32,7 @@ public class ActividadParada extends AppCompatActivity implements Observer{
     private AdaptadorLlegada adapter;
     private RecyclerView.LayoutManager layout;
     private List<Arrive> info;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +42,25 @@ public class ActividadParada extends AppCompatActivity implements Observer{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_parada);
         Bundle b = getIntent().getExtras();
-        String parada = b.getString("parada");
-        GestorConexion g = new GestorConexion();
+        final String parada = b.getString("parada");
+        final GestorConexion g = new GestorConexion();
         this.parada = (TextView) findViewById(R.id.paradaAsiganada);
         vistaPrueba = (RecyclerView) findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         vistaPrueba.setHasFixedSize(true);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                int ult = info.size();
+                info.removeAll(info);
+                adapter.notifyItemRangeRemoved(0, ult);
+                g.getLlegadas(parada);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         // use a linear layout manager
         layout = new LinearLayoutManager(this);
         vistaPrueba.setLayoutManager(layout);
@@ -57,7 +68,7 @@ public class ActividadParada extends AppCompatActivity implements Observer{
         // specify an adapter (see also next example)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        swipeRefreshLayout.setRefreshing(true);
         g.getLlegadas(parada);
         g.addObserver(this);
 
@@ -99,5 +110,6 @@ public class ActividadParada extends AppCompatActivity implements Observer{
     @Override
     public void updateStop(ListaLlegadas llegadas) {
         setInfo(llegadas);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
