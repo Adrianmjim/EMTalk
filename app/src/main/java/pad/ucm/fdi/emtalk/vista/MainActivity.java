@@ -223,27 +223,24 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == Activity.RESULT_OK) {
                     // TODO Extract the data returned from the child Activity.
                     int returnValue = data.getIntExtra("stop", 0);
-                    if (stops.size() > 0) {
-                        int i = 0;
-                        while (stops.get(i).getParada() != returnValue && i < stops.size()) i++;
-                        if (i != stops.size()){
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    List<Integer> save = new ArrayList<>();
+                    for (ParadaFavorita i: stops) save.add(i.getParada());
+                    if (save.contains(returnValue)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 // 2. Chain together various setter methods to set the dialog characteristics
-                            builder.setMessage("Esta parada ya se encuentra añadida.")
-                                    .setTitle("ERROR DE BOBOS");
+                        builder.setMessage("Esta parada ya se encuentra añadida.")
+                                .setTitle("ERROR DE BOBOS");
 
-                            builder.setPositiveButton("Vale Adri. Soy tonto, no lo volveré a hacer.", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // User clicked OK button
-                                    dialog.dismiss();
-                                }
-                            });
-                            AlertDialog dialog = builder.create();
-                            dialog.setCancelable(false);
-                            dialog.show();
-                        }
-                        else addStop(returnValue);
+                        builder.setPositiveButton("Vale Adri. Soy tonto, no lo volveré a hacer.", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User clicked OK button
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.setCancelable(false);
+                        dialog.show();
                     } else addStop(returnValue);
 
 
