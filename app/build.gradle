@@ -8,8 +8,8 @@ android {
         applicationId "pad.ucm.fdi.emtalk"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 3
-        versionName "2.01"
+        versionCode 6
+        versionName "2.21"
     }
     buildTypes {
         release {
@@ -30,6 +30,5 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 }
-
-

@@ -1,21 +1,23 @@
 package pad.ucm.fdi.emtalk.modelo;
 
 
+import android.app.Application;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLinea;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 
-import pad.ucm.fdi.emtalk.vista.ActividadParada;
 import pad.ucm.fdi.emtalk.vista.Observable;
 import pad.ucm.fdi.emtalk.vista.Observer;
 import retrofit2.Call;
@@ -27,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by adrian on 28/04/16.
  */
-public class GestorConexion implements Observable<Observer> {
+public class GestorConexion extends Application implements Observable<Observer> {
     private Retrofit retrofit;
     private final String BASE_URL = "https://openbus.emtmadrid.es:9443/emt-proxy-server/last/";
     private final String API_CLIENT_ID = "WEB.SERV.adrima05@ucm.es";
@@ -63,6 +65,28 @@ public class GestorConexion implements Observable<Observer> {
         });
 
 
+    }
+    public void getRouteLine(String line) {
+        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);
+        RequestBody pass = RequestBody.create(MediaType.parse("text/plain"), API_PASSKEY);
+        RequestBody linea = RequestBody.create(MediaType.parse("text/plain"), line);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Date dateAux = new Date();
+
+        String fecha = dateFormat.format(dateAux);
+        RequestBody date = RequestBody.create(MediaType.parse("text/plain"), fecha);
+        Call<ListaLinea> i = con.getRouteLines(id, pass, linea, date);
+        i.enqueue(new Callback<ListaLinea>() {
+            @Override
+            public void onResponse(Call<ListaLinea> call, Response<ListaLinea> response) {
+                for (Observer i: observers) i.updateRoute(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ListaLinea> call, Throwable t) {
+
+            }
+        });
     }
     public void getParadasLinea(String linea) {
         RequestBody id = RequestBody.create(MediaType.parse("text/plain"), API_CLIENT_ID);

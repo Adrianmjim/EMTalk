@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="66dp"
-    android:background="#FFFFFF"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="6dp"
     android:layout_marginBottom="3dp"
     android:layout_marginTop="3dp"
 
     android:layout_marginLeft="4dp"
     android:layout_marginRight="6dp">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:background="#FFFFFF"
+        >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="2dp"
-        android:id="@+id/autobus"
-        android:textColor="@color/abc_btn_colored_borderless_text_material"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="2dp"
+            android:id="@+id/autobus"
+            android:textColor="@color/abc_btn_colored_borderless_text_material"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="2dp"
-        android:id="@+id/tiempo"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="2dp"
+            android:id="@+id/tiempo"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="2dp"
-        android:id="@+id/metros" />
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="2dp"
+            android:id="@+id/metros" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

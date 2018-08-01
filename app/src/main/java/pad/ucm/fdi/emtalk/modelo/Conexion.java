@@ -6,6 +6,7 @@ package pad.ucm.fdi.emtalk.modelo;
 
 import okhttp3.RequestBody;
 
+import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLinea;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
@@ -33,6 +34,9 @@ public interface Conexion {
     @POST("geo/getStopsLine.php")
     Call<ListaParadas> getStopLine(@Part("idClient") RequestBody id, @Part("passKey") RequestBody pass, @Part("line") RequestBody linea);
 
+    @Multipart
+    @POST("bus/GetRouteLinesRoute.php")
+    Call<ListaLinea> getRouteLines(@Part("idClient") RequestBody id, @Part("passKey") RequestBody pass, @Part("Lines") RequestBody linea, @Part("SelectDate") RequestBody date);
 
 
 }
