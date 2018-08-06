@@ -37,6 +37,7 @@ import pad.ucm.fdi.emtalk.modelo.GestorConexion;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLinea;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.SnappedPoints;
 import pad.ucm.fdi.emtalk.vista.Observer;
 import pad.ucm.fdi.emtalk.vista.llegadas.ActividadParada;
 
@@ -268,8 +269,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void updateRoute(ListaLinea route) {
-        Log.d("PRUEBA", "LLEGAN LINEAS");
+
     }
+
 
     private String fixTime(Integer time) {
         if (time < 60) {

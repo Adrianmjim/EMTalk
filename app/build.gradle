@@ -8,8 +8,8 @@ android {
         applicationId "pad.ucm.fdi.emtalk"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 6
-        versionName "2.21"
+        versionCode 7
+        versionName "2.3"
     }
     buildTypes {
         release {

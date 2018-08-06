@@ -21,7 +21,7 @@ import retrofit2.http.Part;
 /**
  * Created by adrian on 28/04/16.
  */
-public interface Conexion {
+public interface ConexionEMT {
     @Multipart
     @POST("geo/GetArriveStop.php")
     Call<ListaLlegadas> getArriveStop(@Part("idClient") RequestBody id, @Part("passKey") RequestBody pass, @Part("idStop") RequestBody num);

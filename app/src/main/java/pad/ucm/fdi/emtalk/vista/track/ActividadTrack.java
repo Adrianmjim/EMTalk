@@ -22,28 +22,42 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.GestorConexion;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.Arrive;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLinea;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.RouteLineItem;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.SnappedPoint;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.SnappedPoints;
 import pad.ucm.fdi.emtalk.vista.Observer;
 
 public class ActividadTrack extends AppCompatActivity implements OnMapReadyCallback, Observer {
 
+    //Objetos vista
     private GoogleMap mMap;
+    private Marker parada;
+    private List<Marker> marcadores;
+    private PolylineOptions lines, lines2;
+
+    //logica
     private GestorConexion gestor;
     private Timer alarm;
 
+    //datos
     private String  idBus, idLine;
     private int idStop;
-    private PolylineOptions lines;
+
+    private boolean cuadrao;
 
 
-    private Marker marcador;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +68,7 @@ public class ActividadTrack extends AppCompatActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        marcadores = new ArrayList<>();
         gestor = (GestorConexion) getApplication();
         idBus = getIntent().getStringExtra("idBus");
         idStop = getIntent().getIntExtra("idStop", 0);
@@ -91,50 +106,57 @@ public class ActividadTrack extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void updateStop(ListaLlegadas llegadas) {
-        int i = 0;
-        while (i < llegadas.getArrives().size() && !llegadas.getArrives().get(i).getBusId().equals(idBus)) i++;
-        if (i < llegadas.getArrives().size()) {
-            LatLng sydney = new LatLng(llegadas.getArrives().get(i).getLatitude(), llegadas.getArrives().get(i).getLongitude());
-            if (marcador == null) marcador = mMap.addMarker(new MarkerOptions().position(sydney).title("Bus "+ llegadas.getArrives().get(i).getLineId()));
-            else AnimationUtil.animateMarkerToGB(marcador, sydney,new LatLngInterpolator.Spherical()
-            );
+        int j = 0;
+        for (Arrive i: llegadas.getArrives()) {
+            if (i.getLineId().equals(idLine)) {
+                LatLng sydney = new LatLng(i.getLatitude(), i.getLongitude());
+                if (marcadores.size() > 1) {
+                    AnimationUtil.animateMarkerToGB(marcadores.get(j), sydney,new LatLngInterpolator.LinearFixed());
+                    j++;
+                } else {
+                    marcadores.add(mMap.addMarker(new MarkerOptions().position(sydney).title("Bus "+ i.getLineId()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))));
+                }
+            }
 
-        } else {
-            Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView().getRootView(), "No se puede seguir trackeando este autobus.", Snackbar.LENGTH_INDEFINITE);
-            mySnackbar.show();
         }
+        cuadrar();
     }
 
     @Override
     public void updateRoute(ListaLinea route) {
         lines = new PolylineOptions();
-        LatLngBounds.Builder builder = LatLngBounds.builder();
         for (RouteLineItem i: route.getResultValues()) {
-            if(i.getSecDetail() == 19){
-                builder.include(new LatLng(i.getLatitude(),i.getLongitude()));
-                lines.add(new LatLng(i.getLatitude(), i.getLongitude()));
-            } else if (i.getSecDetail() == 10) {
-                mMap.addMarker(new MarkerOptions().title(i.getName()).position(new LatLng(i.getLatitude(), i.getLongitude())).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_circle)));
+            if (i.getSecDetail() == 19) {
+                lines.add(new LatLng(i.getLatitude(),i.getLongitude()));
+            } else if(i.getSecDetail() == 10) {
+                if (i.getNode() == idStop) {
+                    parada = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_stop2)).anchor(0.5f, 0.5f).position(new LatLng(i.getLatitude(),i.getLongitude())));
+                    lines.color(getResources().getColor(R.color.colorPrimary));
+                }
+                else mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_stop)).anchor(0.5f, 0.5f).position(new LatLng(i.getLatitude(),i.getLongitude())));
             }
-
         }
-
-        for (RouteLineItem i: route.getResultValues()) {
-            if(i.getSecDetail() == 29){
-                builder.include(new LatLng(i.getLatitude(),i.getLongitude()));
-                lines.add(new LatLng(i.getLatitude(), i.getLongitude()));
-            } else if (i.getSecDetail() == 20) {
-                mMap.addMarker(new MarkerOptions().title(i.getName()).position(new LatLng(i.getLatitude(), i.getLongitude())).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_circle)));
-            }
-
-        }
+        lines.width(6);
         lines.geodesic(true);
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(), 0);
-        mMap.animateCamera(cu);
-        Polyline line = mMap.addPolyline(lines);
-        line.setColor(getResources().getColor(R.color.colorPrimary));
-        line.setWidth(8);
-        line.setGeodesic(true);
+        mMap.addPolyline(lines);
+
+        lines = new PolylineOptions();
+        for (RouteLineItem i: route.getResultValues()) {
+            if (i.getSecDetail() == 29) {
+                lines.add(new LatLng(i.getLatitude(),i.getLongitude()));
+            } else if(i.getSecDetail() == 20) {
+                if (i.getNode() == idStop) {
+                    parada = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_stop2)).anchor(0.5f, 0.5f).position(new LatLng(i.getLatitude(),i.getLongitude())));
+                    lines.color(getResources().getColor(R.color.colorPrimary));
+                }
+                else mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_stop)).anchor(0.5f, 0.5f).position(new LatLng(i.getLatitude(),i.getLongitude())));
+            }
+        }
+        lines.width(6);
+        lines.geodesic(true);
+        mMap.addPolyline(lines);
+
+        cuadrar();
     }
 
     @Override
@@ -151,5 +173,17 @@ public class ActividadTrack extends AppCompatActivity implements OnMapReadyCallb
     public void onBackPressed() {
         alarm.cancel();
         super.onBackPressed();
+    }
+    private void cuadrar() {
+        if (!cuadrao) {
+            if (marcadores.size() > 1 && parada != null) {
+                LatLngBounds.Builder builder = LatLngBounds.builder();
+                builder.include(parada.getPosition());
+                builder.include(marcadores.get(0).getPosition());
+                builder.include(marcadores.get(1).getPosition());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 10));
+                cuadrao = true;
+            }
+        }
     }
 }

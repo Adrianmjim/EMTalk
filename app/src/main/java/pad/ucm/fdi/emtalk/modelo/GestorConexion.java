@@ -4,6 +4,8 @@ package pad.ucm.fdi.emtalk.modelo;
 import android.app.Application;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,11 +15,14 @@ import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
+import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLinea;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLineas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaParadas;
 
+import pad.ucm.fdi.emtalk.modelo.tiposApi.RouteLineItem;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.SnappedPoints;
 import pad.ucm.fdi.emtalk.vista.Observable;
 import pad.ucm.fdi.emtalk.vista.Observer;
 import retrofit2.Call;
@@ -30,18 +35,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by adrian on 28/04/16.
  */
 public class GestorConexion extends Application implements Observable<Observer> {
-    private Retrofit retrofit;
+    private Retrofit retrofit, retrofit2;
     private final String BASE_URL = "https://openbus.emtmadrid.es:9443/emt-proxy-server/last/";
     private final String API_CLIENT_ID = "WEB.SERV.adrima05@ucm.es";
     private final String API_PASSKEY = "56B93B0E-5E42-4E64-BEE1-44977F5379CA";
-    private Conexion con;
+    private ConexionEMT con;
 
     private List<Observer> observers;
     public GestorConexion() {
 
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-        con = retrofit.create(Conexion.class);
+        con = retrofit.create(ConexionEMT.class);
         observers = new ArrayList<>();
 
     }
@@ -79,7 +84,8 @@ public class GestorConexion extends Application implements Observable<Observer> 
         i.enqueue(new Callback<ListaLinea>() {
             @Override
             public void onResponse(Call<ListaLinea> call, Response<ListaLinea> response) {
-                for (Observer i: observers) i.updateRoute(response.body());
+                for (Observer o: observers) o.updateRoute(response.body());
+
             }
 
             @Override

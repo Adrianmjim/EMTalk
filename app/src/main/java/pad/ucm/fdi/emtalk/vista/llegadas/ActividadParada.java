@@ -24,6 +24,7 @@ import java.util.List;
 import pad.ucm.fdi.emtalk.R;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLinea;
 import pad.ucm.fdi.emtalk.modelo.tiposApi.ListaLlegadas;
+import pad.ucm.fdi.emtalk.modelo.tiposApi.SnappedPoints;
 import pad.ucm.fdi.emtalk.vista.Observer;
 import pad.ucm.fdi.emtalk.vista.track.ActividadTrack;
 
@@ -120,6 +121,7 @@ public class ActividadParada extends AppCompatActivity implements Observer, View
     public void updateRoute(ListaLinea route) {
 
     }
+
 
     @Override
     public void onClick(View view) {
